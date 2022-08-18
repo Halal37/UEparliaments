@@ -13,8 +13,8 @@ class GroupAdmin(admin.ModelAdmin):
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     search_fields = ['country_name']
-    list_display = ['country_name', 'group_key']
-    list_filter = ['group_key']
+    list_display = ['country_name', 'group']
+    list_filter = ['group']
 
 
 # Political parties
@@ -40,7 +40,7 @@ class EuropeanPoliticalPartyAdmin(admin.ModelAdmin):
 
 @admin.register(PoliticalParty)
 class PoliticalPartyAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'founded', 'country_key', 'epp_key', 'get_ideologies']
+    list_display = ['id', 'name', 'founded', 'country', 'epp', 'get_ideologies']
     filter_horizontal = ['ideology']
 
     def get_ideologies(self, obj):
@@ -56,23 +56,23 @@ class PoliticalPartyAdmin(admin.ModelAdmin):
 
 @admin.register(Senate)
 class SenateAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'country_key']
+    list_display = ['id', 'name', 'country']
 
 
 @admin.register(SenateTerm)
 class SenateTermAdmin(admin.ModelAdmin):
-    list_display = ['id', 'term', 'seats', 'senate_key', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'term', 'seats', 'senate', 'beginning_of_term', 'end_of_term']
 
 
 @admin.register(Senator)
 class SenatorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'gender', 'party_key', 'term_of_office_key',
+    list_display = ['id', 'first_name', 'last_name', 'gender', 'party', 'term_of_office',
                     'date_of_birth', 'biographical_notes']
-    filter_horizontal = ['senate_term_key']
+    filter_horizontal = ['senate_term']
 
     def get_terms(self, obj):
-        if obj.senate_term_key.all():
-            return list(obj.senate_term_key.all().values_list('name', flat=True))
+        if obj.senate_term.all():
+            return list(obj.senate_term.all().values_list('name', flat=True))
         else:
             return 'NA'
 
@@ -81,7 +81,7 @@ class SenatorAdmin(admin.ModelAdmin):
 
 @admin.register(MandateOfSenator)
 class MandateOfSenatorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'senate_key', 'senator_key', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'senate', 'senator', 'beginning_of_term', 'end_of_term']
 
 
 # Parliaments
@@ -89,22 +89,23 @@ class MandateOfSenatorAdmin(admin.ModelAdmin):
 
 @admin.register(Parliament)
 class ParliamentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'country_key']
+    list_display = ['id', 'name', 'country']
 
 
 @admin.register(ParliamentaryTerm)
 class ParliamentaryTermAdmin(admin.ModelAdmin):
-    list_display = ['id', 'term',  'seats', 'parliament_key', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'term', 'seats', 'parliament', 'beginning_of_term', 'end_of_term']
+
 
 @admin.register(MP)
 class MPAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'gender', 'party_key',
-                    'term_of_office_key', 'date_of_birth', 'biographical_notes']
-    filter_horizontal = ['parliamentary_term_key']
+    list_display = ['id', 'first_name', 'last_name', 'gender', 'party',
+                    'term_of_office', 'date_of_birth', 'biographical_notes']
+    filter_horizontal = ['parliamentary_term']
 
     def get_terms(self, obj):
-        if obj.parliamentary_term_key.all():
-            return list(obj.parliamentary_term_key.all().values_list('name', flat=True))
+        if obj.parliamentary_term.all():
+            return list(obj.parliamentary_term.all().values_list('name', flat=True))
         else:
             return 'NA'
 
@@ -113,7 +114,7 @@ class MPAdmin(admin.ModelAdmin):
 
 @admin.register(MandateOfMP)
 class MandateOfMPAdmin(admin.ModelAdmin):
-    list_display = ['id', 'parliament_key', 'mp_key', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'parliament', 'mp', 'beginning_of_term', 'end_of_term']
 
 
 # Office
@@ -125,5 +126,4 @@ class KeyFunctionAdmin(admin.ModelAdmin):
 
 @admin.register(TermOfOffice)
 class TermOfOfficeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'key_function_key', 'beginning_of_term', 'end_of_term']
-
+    list_display = ['id', 'key_function', 'beginning_of_term', 'end_of_term']

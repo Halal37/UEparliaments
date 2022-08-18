@@ -11,7 +11,7 @@ class Group(models.Model):
 
 
 class Country(models.Model):
-    group_key = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
     country_name = models.CharField(max_length=50, primary_key=True)
 
     def __str__(self):
@@ -48,8 +48,8 @@ class EuropeanPoliticalParty(models.Model):
 class PoliticalParty(models.Model):
     name = models.CharField(max_length=255)
     founded = models.DateField(null=True)
-    epp_key = models.ForeignKey(EuropeanPoliticalParty, on_delete=models.CASCADE)
-    country_key = models.ForeignKey(Country, on_delete=models.CASCADE)
+    epp = models.ForeignKey(EuropeanPoliticalParty, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     ideology = models.ManyToManyField(Ideology, blank=True)
 
     def __str__(self):
@@ -71,16 +71,17 @@ class KeyFunction(models.Model):
 class TermOfOffice(models.Model):
     beginning_of_term = models.DateField()
     end_of_term = models.DateField()
-    key_function_key = models.ForeignKey(KeyFunction, on_delete=models.CASCADE)
+    key_function = models.ForeignKey(KeyFunction, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.key_function_key) + " " + str(self.beginning_of_term) + " to " + str(self.end_of_term)
+        return str(self.key_function) + " " + str(self.beginning_of_term) + " to " + str(self.end_of_term)
+
 
 # Senate
 
 class Senate(models.Model):
     name = models.CharField(max_length=255)
-    country_key = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -88,7 +89,7 @@ class Senate(models.Model):
 
 class SenateTerm(models.Model):
     seats = models.IntegerField()
-    senate_key = models.ForeignKey(Senate, on_delete=models.CASCADE)
+    senate = models.ForeignKey(Senate, on_delete=models.CASCADE)
     beginning_of_term = models.DateField(null=True)
     end_of_term = models.DateField(null=True)
     term = models.CharField(max_length=255)
@@ -101,9 +102,9 @@ class Senator(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
-    party_key = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=True, blank=True)
-    senate_term_key = models.ManyToManyField(SenateTerm, blank=True)
-    term_of_office_key = models.ForeignKey(TermOfOffice, on_delete=models.CASCADE, null=True, blank=True)
+    party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=True, blank=True)
+    senate_term = models.ManyToManyField(SenateTerm, blank=True)
+    term_of_office = models.ForeignKey(TermOfOffice, on_delete=models.CASCADE, null=True, blank=True)
     date_of_birth = models.DateField(null=True)
     biographical_notes = models.TextField(null=True, blank=True)
 
@@ -112,8 +113,8 @@ class Senator(models.Model):
 
 
 class MandateOfSenator(models.Model):
-    senate_key = models.ForeignKey(Senate, on_delete=models.CASCADE)
-    senator_key = models.ForeignKey(Senator, on_delete=models.CASCADE)
+    senate = models.ForeignKey(Senate, on_delete=models.CASCADE)
+    senator = models.ForeignKey(Senator, on_delete=models.CASCADE)
     beginning_of_term = models.DateField(null=True)
     end_of_term = models.DateField(null=True)
 
@@ -121,7 +122,7 @@ class MandateOfSenator(models.Model):
 # Parliaments
 class Parliament(models.Model):
     name = models.CharField(max_length=255)
-    country_key = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -129,7 +130,7 @@ class Parliament(models.Model):
 
 class ParliamentaryTerm(models.Model):
     seats = models.IntegerField()
-    parliament_key = models.ForeignKey(Parliament, on_delete=models.CASCADE)
+    parliament = models.ForeignKey(Parliament, on_delete=models.CASCADE)
     beginning_of_term = models.DateField(null=True)
     end_of_term = models.DateField(null=True)
     term = models.CharField(max_length=255, blank=True)
@@ -142,9 +143,9 @@ class MP(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
-    party_key = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=True, blank=True)
-    parliamentary_term_key = models.ManyToManyField(ParliamentaryTerm, blank=True)
-    term_of_office_key = models.ForeignKey(TermOfOffice, on_delete=models.CASCADE, null=True, blank=True)
+    party = models.ForeignKey(PoliticalParty, on_delete=models.CASCADE, null=True, blank=True)
+    parliamentary_term = models.ManyToManyField(ParliamentaryTerm, blank=True)
+    term_of_office = models.ForeignKey(TermOfOffice, on_delete=models.CASCADE, null=True, blank=True)
     date_of_birth = models.DateField(null=True)
     biographical_notes = models.TextField(null=True, blank=True)
 
@@ -153,7 +154,7 @@ class MP(models.Model):
 
 
 class MandateOfMP(models.Model):
-    parliament_key = models.ForeignKey(Parliament, on_delete=models.CASCADE)
-    mp_key = models.ForeignKey(MP, on_delete=models.CASCADE)
+    parliament = models.ForeignKey(Parliament, on_delete=models.CASCADE)
+    mp = models.ForeignKey(MP, on_delete=models.CASCADE)
     beginning_of_term = models.DateField(null=True)
     end_of_term = models.DateField(null=True)
