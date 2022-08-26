@@ -83,6 +83,9 @@ def add_gender():
 
 def add_terms():
     try:
+        response = requests.get(f"http://api.sejm.gov.pl/sejm/term")
+        data = response.text
+        parse_json = json.loads(data)
         for element in parse_json:
             new_entry = ParliamentaryTerm(seats=460, term=element['num'], parliament=parliament,
                                           beginning_of_term=element['from'],
