@@ -48,7 +48,7 @@ class TermOfOfficeSerializer(serializers.ModelSerializer):
 class SenateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Senate
-        fields = ['id', 'name', 'country']
+        fields = ['country', 'name']
 
 
 class SenateTermSerializer(serializers.ModelSerializer):
@@ -60,20 +60,20 @@ class SenateTermSerializer(serializers.ModelSerializer):
 class MandateOfSenatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = MandateOfSenator
-        fields = ['id', 'senate', 'senator', 'beginning_of_term', 'end_of_term']
+        fields = ['id', 'senate', 'senator', 'senate_term', 'party', 'beginning_of_term', 'end_of_term']
 
 
 class SenatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Senator
-        fields = ['id', 'first_name', 'last_name', 'gender', 'party', 'senate_term', 'term_of_office', 'date_of_birth',
+        fields = ['id', 'first_name', 'last_name', 'gender', 'term_of_office', 'date_of_birth',
                   'biographical_notes']
 
 
 class ParliamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Parliament
-        fields = ['id', 'name', 'country']
+        fields = ['country', 'name']
 
 
 class ParliamentaryTermSerializer(serializers.ModelSerializer):
@@ -85,11 +85,11 @@ class ParliamentaryTermSerializer(serializers.ModelSerializer):
 class MandateOfMPSerializer(serializers.ModelSerializer):
     class Meta:
         model = MandateOfMP
-        fields = ['id', 'parliament', 'mp', 'beginning_of_term', 'end_of_term']
+        fields = ['id', 'parliament', 'mp', 'parliamentary_term', 'party', 'beginning_of_term', 'end_of_term']
 
 
 class MPSerializer(serializers.ModelSerializer):
     class Meta:
         model = MP
-        fields = ['id', 'first_name', 'last_name', 'gender', 'party', 'parliamentary_term', 'term_of_office',
+        fields = ['id', 'first_name', 'last_name', 'gender', 'term_of_office',
                   'date_of_birth', 'biographical_notes']

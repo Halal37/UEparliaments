@@ -56,7 +56,7 @@ class PoliticalPartyAdmin(admin.ModelAdmin):
 
 @admin.register(Senate)
 class SenateAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'country']
+    list_display = ['country', 'name']
 
 
 @admin.register(SenateTerm)
@@ -66,8 +66,9 @@ class SenateTermAdmin(admin.ModelAdmin):
 
 @admin.register(Senator)
 class SenatorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'gender', 'party', 'term_of_office',
+    list_display = ['id', 'first_name', 'last_name', 'gender', 'term_of_office',
                     'date_of_birth', 'biographical_notes']
+    """
     filter_horizontal = ['senate_term']
 
     def get_terms(self, obj):
@@ -77,11 +78,11 @@ class SenatorAdmin(admin.ModelAdmin):
             return 'NA'
 
     get_terms.short_description = 'terms'
-
+"""
 
 @admin.register(MandateOfSenator)
 class MandateOfSenatorAdmin(admin.ModelAdmin):
-    list_display = ['id', 'senate', 'senator', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'senate', 'senator', 'senate_term', 'party', 'beginning_of_term', 'end_of_term']
 
 
 # Parliaments
@@ -89,7 +90,7 @@ class MandateOfSenatorAdmin(admin.ModelAdmin):
 
 @admin.register(Parliament)
 class ParliamentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'country']
+    list_display = ['country', 'name']
 
 
 @admin.register(ParliamentaryTerm)
@@ -99,8 +100,9 @@ class ParliamentaryTermAdmin(admin.ModelAdmin):
 
 @admin.register(MP)
 class MPAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'gender', 'party',
+    list_display = ['id', 'first_name', 'last_name', 'gender',
                     'term_of_office', 'date_of_birth', 'biographical_notes']
+"""
     filter_horizontal = ['parliamentary_term']
 
     def get_terms(self, obj):
@@ -110,11 +112,11 @@ class MPAdmin(admin.ModelAdmin):
             return 'NA'
 
     get_terms.short_description = 'terms'
-
+"""
 
 @admin.register(MandateOfMP)
 class MandateOfMPAdmin(admin.ModelAdmin):
-    list_display = ['id', 'parliament', 'mp', 'beginning_of_term', 'end_of_term']
+    list_display = ['id', 'parliament', 'mp', 'parliamentary_term', 'party', 'beginning_of_term', 'end_of_term']
 
 
 # Office

@@ -86,7 +86,7 @@ class MPViewSet(viewsets.ModelViewSet):
     serializer_class = MPSerializer
     search_fields = ['first_name', 'last_name']
     filter_backends = (filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend)
-    filterset_fields = ['first_name', 'party']
+    filterset_fields = ['first_name']
 
 
 def home_view_screen(request):
