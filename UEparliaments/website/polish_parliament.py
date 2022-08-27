@@ -27,13 +27,13 @@ def add_mps_and_political_parties():
             parse_json = json.loads(data)
             for element in parse_json:
                 if "club" in element:
-                    new_entry_mp = MP.objects.get_or_create(first_name=element['firstName'],
-                                                            last_name=element['lastName'])
+                    MP.objects.get_or_create(first_name=element['firstName'],
+                                             last_name=element['lastName'])
 
-                    new_entry_party, created = PoliticalParty.objects.get_or_create(
+                    PoliticalParty.objects.get_or_create(
                         country=Country.objects.get(country_name="Poland"), name=element['club'])
                     if "inactiveCause" not in element:
-                        new_entry_mandate = MandateOfMP.objects.get_or_create(
+                        MandateOfMP.objects.get_or_create(
                             party=PoliticalParty.objects.get(country="Poland", name=element['club']),
                             parliamentary_term=ParliamentaryTerm.objects.get(
                                 parliament=Parliament.objects.get(country="Poland", name="Sejm"),
@@ -47,7 +47,7 @@ def add_mps_and_political_parties():
                                 parliament=Parliament.objects.get(country="Poland", name="Sejm"),
                                 term=f"{i}").end_of_term)
                     else:
-                        new_entry_mandate = MandateOfMP.objects.get_or_create(
+                        MandateOfMP.objects.get_or_create(
                             party=PoliticalParty.objects.get(country="Poland", name=element['club']),
                             parliamentary_term=ParliamentaryTerm.objects.get(
                                 parliament=Parliament.objects.get(country="Poland", name="Sejm"),
@@ -87,15 +87,15 @@ def add_terms():
         data = response.text
         parse_json = json.loads(data)
         for element in parse_json:
-            new_entry = ParliamentaryTerm(seats=460, term=element['num'], parliament=parliament,
-                                          beginning_of_term=element['from'],
-                                          end_of_term=element['to'])
-            new_entry.save()
+            ParliamentaryTerm.objects.get_or_create(seats=460, term=element['num'], parliament=parliament,
+                                                    beginning_of_term=element['from'],
+                                                    end_of_term=element['to'])
+
 
     except KeyError:
         print("Could not save:")
-        new_entry = ParliamentaryTerm(seats=460, term=element['num'], parliament=parliament,
-                                      beginning_of_term=element['from'],
-                                      end_of_term=None)
-        new_entry.save()
+        ParliamentaryTerm.objects.get_or_create(seats=460, term=element['num'], parliament=parliament,
+                                                beginning_of_term=element['from'],
+                                                end_of_term=None)
+
     print("Action complete!")
