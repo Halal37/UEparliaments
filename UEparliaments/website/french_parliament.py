@@ -55,11 +55,9 @@ def add_mps_and_political_parties():
                     end_of_term = element['mandat_fin']
                 else:
                     end_of_term = None
-                print(terms[j])
                 term = ParliamentaryTerm.objects.get(
                     parliament=parliament,
                     term=terms[j])
-                print("opa")
                 MandateOfMP.objects.get_or_create(
                     party=PoliticalParty.objects.get(country="France", name=party),
                     parliamentary_term=term,

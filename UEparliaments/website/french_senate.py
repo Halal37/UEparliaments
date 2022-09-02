@@ -123,8 +123,6 @@ def add_senators_and_political_parties():
                         term = SenateTerm.objects.get(
                             senate=senate,
                             term=terms[i])
-                        print(term)
-                        print("opa")
                         MandateOfSenator.objects.get_or_create(
                             party=PoliticalParty.objects.get(country="France", name=party),
                             senate_term=term,
@@ -140,8 +138,6 @@ def add_senators_and_political_parties():
                         term = SenateTerm.objects.get(
                             senate=senate,
                             term=terms[i])
-                        print(term)
-                        print("opa")
                         MandateOfSenator.objects.get_or_create(
                             party=PoliticalParty.objects.get(country="France", name=party),
                             senate_term=term,
@@ -155,8 +151,6 @@ def add_senators_and_political_parties():
                         term = SenateTerm.objects.get(
                             senate=senate,
                             term=terms[i])
-                        print(term)
-                        print("opa")
                         MandateOfSenator.objects.get_or_create(
                             party=PoliticalParty.objects.get(country="France", name=party),
                             senate_term=term,
