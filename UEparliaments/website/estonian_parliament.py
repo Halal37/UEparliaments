@@ -1,7 +1,6 @@
 import os
 import django
 import requests
-import xmltodict
 import json
 import logging
 import sys
@@ -24,18 +23,11 @@ def add_mps_and_political_parties():
         response = requests.get("https://api.riigikogu.ee/api/plenary-members?includeInactive=true&lang=et")
         data = response.text
         parse_json = json.loads(data)
-        print(parse_json)
         for i, element in enumerate(parse_json):
-            print(element)
-            print(i)
-            print(element["firstName"])
-            print(element["lastName"])
             if element["faction"] is not None:
                 party = element["faction"]["name"]
             else:
                 party = "Independent"
-            print(element["plenaryMembership"]["startDate"])
-            print(element["plenaryMembership"]["endDate"])
             uuid = element["uuid"]
             if element["active"] is True:
                 end_of_term = None
