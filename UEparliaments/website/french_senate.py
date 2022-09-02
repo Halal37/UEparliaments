@@ -188,8 +188,8 @@ def add_terms():
 
         print(e)
 
+    print("Action complete!")
 
-print("Action complete!")
 
 if __name__ == "__main__":
     add_terms()
