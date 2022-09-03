@@ -58,13 +58,19 @@ def add_mps_and_political_parties():
                 term = ParliamentaryTerm.objects.get(
                     parliament=parliament,
                     term=terms[j])
-                MandateOfMP.objects.get_or_create(
-                    party=PoliticalParty.objects.get(country="France", name=party),
-                    parliamentary_term=term,
-                    parliament=parliament, mp=MP.objects.get(first_name=element['prenom'],
-                                                             last_name=element['nom_de_famille']),
-                    beginning_of_term=element['mandat_debut'],
-                    end_of_term=end_of_term)
+                if ((term.end_of_term is None) or (end_of_term is None and j is 0) or (str(term.end_of_term) >= end_of_term)) and (str(
+                        term.beginning_of_term) <= element['mandat_debut']):
+                    MandateOfMP.objects.get_or_create(
+                        party=PoliticalParty.objects.get(country="France", name=party),
+                        parliamentary_term=ParliamentaryTerm.objects.get(
+                            parliament=parliament,
+                            term=terms[j]),
+                        parliament=parliament, mp=MP.objects.get(first_name=element['prenom'],
+                                                                 last_name=element['nom_de_famille'],
+                                                                 date_of_birth=element['date_naissance'],
+                                                                 gender=gender),
+                        beginning_of_term=element['mandat_debut'],
+                        end_of_term=end_of_term)
 
     except Exception as e:
         print("Could not save: ")
@@ -113,5 +119,5 @@ def add_terms():
 
 
 if __name__ == "__main__":
-    add_terms()
+    # add_terms()
     add_mps_and_political_parties()
