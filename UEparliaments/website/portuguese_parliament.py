@@ -110,7 +110,169 @@ def add_mps():
                 term)
             data = response.text
             parse_json = json.loads(data)
-            # print(parse_json['RegistoBiografico']['RegistoBiograficoList']['pt_ar_wsgode_objectos_DadosRegistoBiograficoWeb'])
+            for element in parse_json['RegistoBiografico']['RegistoBiograficoList'][
+                'pt_ar_wsgode_objectos_DadosRegistoBiograficoWeb']:
+                if element["cadSexo"] is "F":
+                    gender = "female"
+                else:
+                    gender = "male"
+                if "cadDtNascimento" in element:
+                    date_of_birth = element["cadDtNascimento"]
+                else:
+                    date_of_birth = None
+                if type(element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]) is not list:
+                    if element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]["legDes"] == "Cons" or \
+                            element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]["legDes"] == "IB" or \
+                            element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]["legDes"] == "IA":
+                        continue
+                    parliamentary_term = roman.fromRoman(
+                        element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]["legDes"])
+                    party = element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]["parSigla"]
+                    PoliticalParty.objects.get_or_create(
+                        country=Country.objects.get(country_name="Portugal"), name=party)
+                    if " DE " in element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                        "depNomeParlamentar"]:
+                        first_name = element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                            "depNomeParlamentar"].split(" DE")[0].lower().title()
+                        last_name = "de" + element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                            "depNomeParlamentar"].split(" DE")[1].lower().title()
+                    else:
+                        last_name = element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                            "depNomeParlamentar"].split()[-1].lower().title()
+                        first_name = element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                            "depNomeParlamentar"].lower().title().split(" " + last_name)[0]
+                    MP.objects.get_or_create(first_name=first_name,
+                                             last_name=last_name,
+                                             gender=gender,
+                                             date_of_birth=date_of_birth)
+                    if parliamentary_term >= 2:
+                        link = information_base[15 - parliamentary_term]
+                    else:
+                        break
+
+                    link_response = requests.get(
+                        link)
+                    link_data = link_response.text
+                    link_parse_json = json.loads(link_data)
+                    for deputy in link_parse_json['Legislatura']["Deputados"][
+                        "pt_ar_wsgode_objectos_DadosDeputadoSearch"]:
+                        if deputy["depNomeParlamentar"] == \
+                                element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"][
+                                    "depNomeParlamentar"]:
+                            if type(deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]) is list:
+                                for terms in deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]:
+                                    beginning_of_term = terms["gpDtInicio"]
+                                    if "gpDtFim" in terms:
+                                        if terms["gpDtFim"] == "2022-08-22":
+                                           end_of_term = None
+                                        else:
+                                            end_of_term = terms["gpDtFim"]
+                                    else:
+                                        end_of_term = None
+                            else:
+                                beginning_of_term = deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                    "gpDtInicio"]
+                                if "gpDtFim" in deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]:
+                                    if deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                        "gpDtFim"] == "2022-08-22":
+                                        end_of_term = None
+                                    else:
+                                        end_of_term = deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                            "gpDtFim"]
+                                else:
+                                    end_of_term = None
+                            MandateOfMP.objects.get_or_create(
+                                party=PoliticalParty.objects.get(country="Portugal", name=party),
+                                parliamentary_term=ParliamentaryTerm.objects.get(
+                                    parliament=parliament,
+                                    term=parliamentary_term),
+                                parliament=parliament, mp=MP.objects.get(first_name=first_name,
+                                                                         last_name=last_name,
+                                                                         gender=gender,
+                                                                         date_of_birth=date_of_birth),
+                                beginning_of_term=beginning_of_term,
+                                end_of_term=end_of_term)
+
+                            break
+                else:
+                    for i in element["cadDeputadoLegis"]["pt_ar_wsgode_objectos_DadosDeputadoLegis"]:
+                        if i["legDes"] == "Cons" or i["legDes"] == "IB" or i["legDes"] == "IA":
+                            continue
+                        parliamentary_term = roman.fromRoman(
+                            i["legDes"])
+                        party = i["parSigla"]
+                        PoliticalParty.objects.get_or_create(
+                            country=Country.objects.get(country_name="Portugal"), name=party)
+                        if " DE " in i["depNomeParlamentar"]:
+                            first_name = i["depNomeParlamentar"].split(" DE")[0].lower().title()
+                            last_name = "de" + i["depNomeParlamentar"].split(" DE")[1].lower().title()
+                        else:
+                            last_name = i["depNomeParlamentar"].split()[-1].lower().title()
+                            first_name = i["depNomeParlamentar"].lower().title().split(" " + last_name)[0]
+                        MP.objects.get_or_create(first_name=first_name,
+                                                 last_name=last_name,
+                                                 gender=gender,
+                                                 date_of_birth=date_of_birth)
+                        if parliamentary_term >= 2:
+                            link = information_base[15 - parliamentary_term]
+                        else:
+                            break
+                        exists = MandateOfMP.objects.filter(parliamentary_term=ParliamentaryTerm.objects.get(
+                            parliament=parliament,
+                            term=parliamentary_term),
+                            parliament=parliament,
+                            party=PoliticalParty.objects.get(country="Portugal", name=party),
+                            mp=MP.objects.get(first_name=first_name,
+                                              last_name=last_name,
+                                              gender=gender,
+                                              date_of_birth=date_of_birth))
+                        if len(exists) > 0:
+                            continue
+
+                        link_response = requests.get(
+                            link)
+                        link_data = link_response.text
+                        link_parse_json = json.loads(link_data)
+                        for deputy in link_parse_json['Legislatura']["Deputados"][
+                            "pt_ar_wsgode_objectos_DadosDeputadoSearch"]:
+                            if deputy["depNomeParlamentar"] == i["depNomeParlamentar"]:
+                                if type(deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]) is list:
+                                    for terms in deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]:
+                                        beginning_of_term = terms["gpDtInicio"]
+                                        if "gpDtFim" in terms:
+                                            if terms["gpDtFim"] == "2022-08-22":
+                                                end_of_term = None
+                                            else:
+                                                end_of_term = terms["gpDtFim"]
+                                        else:
+                                            end_of_term = None
+                                else:
+                                    beginning_of_term = deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                        "gpDtInicio"]
+                                    if "gpDtFim" in deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"]:
+                                        if deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                            "gpDtFim"] == "2022-08-22":
+                                            end_of_term = None
+                                        else:
+                                            end_of_term = deputy["depGP"]["pt_ar_wsgode_objectos_DadosSituacaoGP"][
+                                                "gpDtFim"]
+
+                                    else:
+                                        end_of_term = None
+                                MandateOfMP.objects.get_or_create(
+                                    party=PoliticalParty.objects.get(country="Portugal", name=party),
+                                    parliamentary_term=ParliamentaryTerm.objects.get(
+                                        parliament=parliament,
+                                        term=parliamentary_term),
+                                    parliament=parliament, mp=MP.objects.get(first_name=first_name,
+                                                                             last_name=last_name,
+                                                                             gender=gender,
+                                                                             date_of_birth=date_of_birth),
+                                    beginning_of_term=beginning_of_term,
+                                    end_of_term=end_of_term)
+
+                                break
+
             # TODO: MPS
 
 
