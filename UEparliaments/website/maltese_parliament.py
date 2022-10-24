@@ -69,7 +69,6 @@ def add_current_term_mps_and_political_parties():
                                 mp_terms = info.find_all("div", {"class", "panel-default"})
                                 for mp_term in mp_terms:
                                     if mp_term.find("p") is not None:
-                                        #  print(mp_term.find("p").find("a"))
                                         mp_link = mp_term.find("p").find("a")['href']
                                         mp_link = mp_link.split("th")[0].split("rd")[0].split("nd")[0].split("st")[0]
                                         mp_term_number = mp_link.split("/en/")[1]
