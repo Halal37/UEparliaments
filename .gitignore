@@ -122,3 +122,4 @@ GitHub.sublime-settings
 **/.DS_Store
 
 **/settings.py
+/UEparliaments/static/UEparliaments/

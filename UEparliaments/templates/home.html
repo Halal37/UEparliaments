@@ -1,5 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
+{% load static %}
+<link rel ="stylesheet"
+      type = "text/css"
+      href="{% static 'UEparliaments/css/bootstrap.css' %}"
+      />
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,5 +16,7 @@
 {% for i in response%}
 {{i}}
 {%endfor%}
+Hello
+<p> Text </p>
 </body>
 </html>
