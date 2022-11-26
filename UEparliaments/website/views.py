@@ -91,7 +91,15 @@ class MPViewSet(viewsets.ModelViewSet):
 
 def home_view_screen(request):
     print(request.headers)
-    return render(request, 'home.html', {})
+    parliament = Parliament.objects.get(country="Latvia")
+
+    term = ParliamentaryTerm.objects.get(parliament=parliament)
+    mandates = MandateOfMP.objects.filter(parliamentary_term=term)
+    #value = mandates
+    value = []
+    for mandate in mandates:
+       value.append(mandate.mp)
+    return render(request, 'UEparliaments/home.html', {"value": value})
 
 
 """
