@@ -8,34 +8,38 @@
     <link rel="stylesheet" href="{% static 'parliaments.css' %}">
     <title>Title</title>
 </head>
-<body>
-
 <script type="text/javascript" src=" {% static 'parliaments_house.js' %} ">
+    <body>
+
+
 </script>
-<form method="post" , action="post">
+<form method="get" action="list-of-members">
     <select class="form-control" id="country" name='selected_country' onchange='select_country(this)'>
-        <option value="">{{ parliament.country }}</option>
+        <option value="{{ parliament.country }}">{{ parliament.country }}</option>
         {% for country in countries %}
         <option value='parliament.country'>{{ country.country_name }}</option>
         {% endfor %}
     </select>
 
     <select class="form-control" id="house" name='selected_house' onchange='select_house(this)'>
-        <option value="">{{ house }}</option>
+        <option value="{{ house }}">{{ house }}</option>
         <option value='{{parliament.id}}'>{{ parliament.name }}</option>
         {% for senate in senates %}
         <option value='{{parliament.id}}'>{{ senate.name }}</option>
         {% endfor %}
     </select>
     <select class="form-control" id="term" name='selected_term' onchange='select_term(this)'>
-        <option value="">Term</option>
+        <option value="{{ term.term }}">Term</option>
         {% for term in terms %}
-        <option value='{{parliament.term}}'>{{ term.term }}</option>
+        <option value='{{ term.term }}'>{{ term.term }}</option>
         {% endfor %}
     </select>
-    <input class="selectOption-hide" type="submit" name="button_1" value="List of members" onclick="">
-    <input class="selectOption-hide" type="submit" name="button_2" value="Parliament view" onclick="">
+    <button class="selectOption-hide">List of members
+    </button>
+    <button class="selectOption-hide" formaction="parliament-view">Parliament view</button>
 </form>
 </body>
 {% endblock %}
 </html>
+
+<!--formaction="../../../list-of-members/"-->

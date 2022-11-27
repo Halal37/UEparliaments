@@ -15,7 +15,7 @@
 
 <form method="post" , action="post">
     <select class="form-control" id="country" name='selected_country' onchange='select_country(this)'>
-        <option value="">{{ parliament.country }}</option>
+        <option value="parliament">{{ parliament.country }}</option>
         {% for country in countries %}
         <option value='parliament.country'>{{ country.country_name }}</option>
         {% endfor %}

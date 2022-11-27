@@ -37,5 +37,8 @@ urlpatterns = [
     path('parliaments/<str:country>/<str:house>/', views.parliaments_house_view_screen, name='parliaments_house'),
     path('elections', views.elections_home_view_screen, name='elections'),
     path('about', views.about_home_view_screen, name='about'),
+    path('parliaments/<str:country>/<str:house>/list-of-members/', views.list_of_members_view_screen, name='list-of-members'),
+    path('parliaments/<str:country>/<str:house>/<str:term>/<str:party>/list-of-members/', views.party_list_of_members_view_screen, name='party-list-of-members'),
+    path('parliaments/<str:country>/<str:house>/parliament-view/', views.parliament_view_screen, name='parliament-view'),
 
 ]

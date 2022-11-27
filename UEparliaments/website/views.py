@@ -126,7 +126,80 @@ def parliaments_house_view_screen(request, country, house):
                    "house": house}, )
 
 
+def list_of_members_view_screen(request, country, house):
+    term = request.GET.get('selected_term', '')
+    parliament = Parliament.objects.get(country=country)
+    terms = ParliamentaryTerm.objects.filter(parliament=parliament)
 
+    if house in parliament.name:
+        for temp_term in terms:
+            if temp_term.term == term:
+                mandates = MandateOfMP.objects.filter(parliament=parliament, parliamentary_term=temp_term)
+    else:
+        senate = Senate.objects.get(country=country)
+        senate_terms = SenateTerm.objects.filter(senate=senate)
+        for temp_term in senate_terms:
+            if temp_term.term == term:
+                mandates = MandateOfSenator.objects.filter(senate=senate, senate_term=temp_term)
+    political_parties = set()
+    for mandate in mandates:
+        political_parties.add(mandate.party)
+
+    return render(request, 'UEparliaments/list_of_members.html',
+                  {"mandates": mandates, "political_parties": political_parties, })
+
+
+def parliament_view_screen(request, country, house):
+    countries = Country.objects.all()
+    parliament = Parliament.objects.get(country=country)
+    senates = Senate.objects.filter(country=country)
+    if house == parliament.name:
+        terms = ParliamentaryTerm.objects.filter(parliament=parliament)
+    else:
+        terms = SenateTerm.objects.filter(senate=senates[0])
+
+    return render(request, 'UEparliaments/home.html',
+                  {"countries": countries, "parliament": parliament, "senates": senates, "terms": terms,
+                   "house": house}, )
+
+
+def party_list_of_members_view_screen(request, country, house, term, party):
+    parliament = Parliament.objects.get(country=country)
+    terms = ParliamentaryTerm.objects.filter(parliament=parliament)
+    if party == "Political party":
+        pass
+    else:
+        political_party = PoliticalParty.objects.get(country=country, name=party)
+    if house in parliament.name:
+        for temp_term in terms:
+            if temp_term.term == term:
+                mandates = MandateOfMP.objects.filter(parliament=parliament, parliamentary_term=temp_term)
+                if party == "Political party":
+                    party_mandates = mandates
+
+                else:
+                    party_mandates = MandateOfMP.objects.filter(parliament=parliament, parliamentary_term=temp_term,
+                                                                party=political_party)
+
+
+    else:
+        senate = Senate.objects.get(country=country)
+        senate_terms = SenateTerm.objects.filter(senate=senate)
+        for temp_term in senate_terms:
+            if temp_term.term == term:
+                mandates = MandateOfSenator.objects.filter(senate=senate, senate_term=temp_term)
+                if party is not "Political party":
+                    party_mandates = mandates
+                else:
+                    party_mandates = MandateOfSenator.objects.filter(senate=senate, senate_term=temp_term,
+                                                                     party=political_party)
+
+    political_parties = set()
+    for mandate in mandates:
+        political_parties.add(mandate.party)
+
+    return render(request, 'UEparliaments/party_list_of_members.html',
+                  {"mandates": party_mandates, "political_parties": political_parties, "current_party": party})
 
 
 def elections_home_view_screen(request):

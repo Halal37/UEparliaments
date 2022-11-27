@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'UEparliaments/base.html' %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src=" {% static 'list_of_members.js' %} "></script>
+<body>
+<select class="form-control" id="country" name='selected_country' onchange='select_party(this)'>
+    <option value="{{ parliament.country }}">Political party</option>
+    {% for party in political_parties %}
+    <option value='parliament.country'>{{ party }}</option>
+    {% endfor %}
+</select>
+{% for mandate in mandates%}
+{{mandate.mp}}
+{{mandate.senator}}
+{{mandate.party}},
+
+
+{%endfor%}
+</body>
+{% endblock %}
+</html>
