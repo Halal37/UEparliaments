@@ -90,21 +90,52 @@ class MPViewSet(viewsets.ModelViewSet):
 
 
 def home_view_screen(request):
-    print(request.headers)
     parliament = Parliament.objects.get(country="Latvia")
-
     term = ParliamentaryTerm.objects.get(parliament=parliament)
     mandates = MandateOfMP.objects.filter(parliamentary_term=term)
-    #value = mandates
     value = []
     for mandate in mandates:
-       value.append(mandate.mp)
+        value.append(mandate.mp)
     return render(request, 'UEparliaments/home.html', {"value": value})
 
 
-"""
-def estonia(request):
-    response = requests.get("https://api.riigikogu.ee/api/plenary-members?lang=EN")
-    print(response)
-    return render(request, 'estonia.html', {'response': response})
-"""
+def parliaments_home_view_screen(request):
+    countries = Country.objects.all()
+    return render(request, 'UEparliaments/parliaments.html', {"countries": countries}, )
+
+
+def parliaments_country_view_screen(request, country):
+    countries = Country.objects.all()
+    parliament = Parliament.objects.get(country=country)
+    senates = Senate.objects.filter(country=country)
+    return render(request, 'UEparliaments/parliaments_country.html',
+                  {"countries": countries, "parliament": parliament, "senates": senates}, )
+
+
+def parliaments_house_view_screen(request, country, house):
+    countries = Country.objects.all()
+    parliament = Parliament.objects.get(country=country)
+    senates = Senate.objects.filter(country=country)
+    if house == parliament.name:
+        terms = ParliamentaryTerm.objects.filter(parliament=parliament)
+    else:
+        terms = SenateTerm.objects.filter(senate=senates[0])
+
+    return render(request, 'UEparliaments/parliaments_house.html',
+                  {"countries": countries, "parliament": parliament, "senates": senates, "terms": terms,
+                   "house": house}, )
+
+
+
+
+
+def elections_home_view_screen(request):
+    return render(request, 'UEparliaments/elections.html')
+
+
+def epp_home_view_screen(request):
+    return render(request, 'UEparliaments/epp.html')
+
+
+def about_home_view_screen(request):
+    return render(request, 'UEparliaments/about.html')

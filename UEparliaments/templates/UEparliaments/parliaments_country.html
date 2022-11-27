@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% extends 'UEparliaments/base.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'parliaments.css' %}">
+    <title>Title</title>
+</head>
+<body>
+
+<script type="text/javascript" src=" {% static 'parliaments_country.js' %} ">
+</script>
+
+<form method="post" , action="post">
+    <select class="form-control" id="country" name='selected_country' onchange='select_country(this)'>
+        <option value="">{{ parliament.country }}</option>
+        {% for country in countries %}
+        <option value='parliament.country'>{{ country.country_name }}</option>
+        {% endfor %}
+    </select>
+
+    <select class="form-control" id="house" name='selected_house' onchange='select_house(this)'>
+        <option value="">House</option>
+        <option value='{{parliament.id}}'>{{ parliament.name }}</option>
+        {% for senate in senates %}
+        <option value='{{parliament.id}}'>{{ senate.name }}</option>
+        {% endfor %}
+    </select>
+
+</form>
+</body>
+{% endblock %}
+</html>

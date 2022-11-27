@@ -31,4 +31,11 @@ urlpatterns = [
         extra_context={'schema_url': 'api_schema'}
     ), name='swagger-ui'),
     path('', views.home_view_screen, name='home'),
+    path('epp', views.epp_home_view_screen, name='epp'),
+    path('parliaments', views.parliaments_home_view_screen, name='parliaments'),
+    path('parliaments/<str:country>/', views.parliaments_country_view_screen, name='parliaments_country'),
+    path('parliaments/<str:country>/<str:house>/', views.parliaments_house_view_screen, name='parliaments_house'),
+    path('elections', views.elections_home_view_screen, name='elections'),
+    path('about', views.about_home_view_screen, name='about'),
+
 ]
